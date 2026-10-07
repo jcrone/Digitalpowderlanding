@@ -1,0 +1,304 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Digital Powder — Software for the gear-swapping world</title>
+  <meta name="description" content="Digital Powder builds software that helps skiers, riders, and gear shops buy, sell, and consign outdoor gear. Makers of MySkiSwap and ConsignGear.">
+  <meta property="og:title" content="Digital Powder">
+  <meta property="og:description" content="Software that keeps great gear on the mountain. Makers of MySkiSwap and ConsignGear.">
+  <meta property="og:url" content="https://digitalpowder.io">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --night: #0b1626;
+      --night-2: #12223a;
+      --ink: #0f1b2d;
+      --powder: #f5f8fc;
+      --snow: #ffffff;
+      --mist: #c9d6e6;
+      --muted: #5b6b82;
+      --glacier: #3fa9f5;
+      --glacier-dark: #1f7fcc;
+      --alpenglow: #ff7a59;
+      --radius: 16px;
+      --max: 1120px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      color: var(--ink);
+      background: var(--powder);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; }
+    .wrap { max-width: var(--max); margin: 0 auto; padding: 0 20px; }
+
+    /* Nav */
+    header.nav {
+      position: sticky; top: 0; z-index: 10;
+      background: rgba(11, 22, 38, 0.85);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .brand { display: flex; align-items: center; gap: 10px; color: var(--snow); text-decoration: none; font-weight: 800; letter-spacing: -0.02em; font-size: 1.1rem; }
+    .brand svg { width: 28px; height: 28px; }
+    .nav ul { list-style: none; display: flex; gap: 28px; margin: 0; padding: 0; }
+    .nav ul a { color: var(--mist); text-decoration: none; font-size: 0.95rem; font-weight: 500; }
+    .nav ul a:hover { color: var(--snow); }
+    @media (max-width: 640px) { .nav ul { display: none; } }
+
+    /* Hero */
+    .hero {
+      position: relative; overflow: hidden;
+      background: radial-gradient(1200px 500px at 70% -10%, #1d3a63 0%, transparent 60%), linear-gradient(180deg, var(--night) 0%, var(--night-2) 100%);
+      color: var(--snow);
+      padding: 110px 0 200px;
+    }
+    .eyebrow {
+      display: inline-block; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--glacier); background: rgba(63,169,245,0.12); padding: 6px 12px; border-radius: 999px;
+    }
+    .hero h1 { font-size: clamp(2.4rem, 6vw, 4.2rem); line-height: 1.05; letter-spacing: -0.035em; margin: 22px 0 20px; max-width: 14ch; }
+    .hero h1 span { color: var(--glacier); }
+    .hero p.lead { font-size: clamp(1.05rem, 2vw, 1.25rem); color: var(--mist); max-width: 56ch; margin: 0 0 36px; }
+    .cta-row { display: flex; flex-wrap: wrap; gap: 14px; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px; padding: 14px 22px; border-radius: 12px;
+      font-weight: 600; text-decoration: none; font-size: 1rem; border: 0; cursor: pointer; transition: transform .15s ease, background .15s ease;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary { background: var(--glacier); color: var(--night); }
+    .btn-primary:hover { background: #66bcf8; }
+    .btn-ghost { background: rgba(255,255,255,0.08); color: var(--snow); border: 1px solid rgba(255,255,255,0.15); }
+    .mountains { position: absolute; left: 0; right: 0; bottom: -1px; width: 100%; height: auto; display: block; }
+
+    /* Sections */
+    section { padding: 96px 0; }
+    .section-head { max-width: 640px; margin-bottom: 48px; }
+    .section-head .kicker { color: var(--glacier-dark); font-weight: 700; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; }
+    .section-head h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); letter-spacing: -0.03em; line-height: 1.15; margin: 10px 0 14px; }
+    .section-head p { color: var(--muted); font-size: 1.1rem; margin: 0; }
+
+    /* Products */
+    .products { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    @media (max-width: 860px) { .products { grid-template-columns: 1fr; } }
+    .card {
+      background: var(--snow); border-radius: var(--radius); padding: 36px;
+      border: 1px solid #e3eaf3; box-shadow: 0 1px 2px rgba(15,27,45,0.04), 0 12px 32px rgba(15,27,45,0.06);
+      display: flex; flex-direction: column;
+    }
+    .card .tag { align-self: flex-start; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 5px 10px; border-radius: 999px; }
+    .tag.live { background: #e3f6ec; color: #1a7f4b; }
+    .tag.soon { background: #fff0ea; color: #c4502f; }
+    .card h3 { font-size: 1.7rem; letter-spacing: -0.02em; margin: 18px 0 8px; }
+    .card .sub { font-weight: 600; color: var(--glacier-dark); margin: 0 0 14px; }
+    .card p { color: var(--muted); margin: 0 0 20px; }
+    .card ul { list-style: none; padding: 0; margin: 0 0 28px; display: grid; gap: 10px; }
+    .card li { display: flex; gap: 10px; align-items: flex-start; }
+    .card li::before { content: ""; flex: 0 0 18px; height: 18px; margin-top: 4px; border-radius: 50%; background: var(--glacier) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") center/11px no-repeat; }
+    .card .actions { margin-top: auto; }
+    .card .btn-primary { background: var(--night); color: var(--snow); }
+    .card .btn-primary:hover { background: var(--night-2); }
+    .card.featured { border-top: 4px solid var(--glacier); }
+    .card.upcoming { border-top: 4px solid var(--alpenglow); }
+
+    /* Waitlist form */
+    .waitlist { display: flex; gap: 10px; flex-wrap: wrap; }
+    .waitlist input {
+      flex: 1 1 200px; padding: 13px 14px; border-radius: 12px; border: 1px solid #d4dde9; font: inherit; font-size: 1rem; min-width: 0;
+    }
+    .waitlist input:focus { outline: 2px solid var(--glacier); outline-offset: 1px; border-color: transparent; }
+    .waitlist .btn { background: var(--alpenglow); color: var(--snow); }
+    .waitlist .btn:hover { background: #ff9071; }
+
+    /* Mission */
+    .mission { background: var(--snow); border-top: 1px solid #e3eaf3; border-bottom: 1px solid #e3eaf3; }
+    .pillars { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+    @media (max-width: 860px) { .pillars { grid-template-columns: 1fr; } }
+    .pillar .icon { width: 48px; height: 48px; border-radius: 12px; background: rgba(63,169,245,0.12); display: grid; place-items: center; margin-bottom: 16px; }
+    .pillar .icon svg { width: 24px; height: 24px; stroke: var(--glacier-dark); }
+    .pillar h4 { font-size: 1.15rem; margin: 0 0 8px; }
+    .pillar p { color: var(--muted); margin: 0; }
+
+    /* About */
+    .about-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 56px; align-items: center; }
+    @media (max-width: 860px) { .about-grid { grid-template-columns: 1fr; gap: 32px; } }
+    .about-grid p { color: var(--muted); font-size: 1.08rem; }
+    .stat-block { background: var(--night); color: var(--snow); border-radius: var(--radius); padding: 36px; display: grid; gap: 24px; }
+    .stat-block div strong { display: block; font-size: 1.05rem; color: var(--glacier); margin-bottom: 4px; }
+    .stat-block div span { color: var(--mist); }
+
+    /* Contact */
+    .contact { background: linear-gradient(180deg, var(--night-2), var(--night)); color: var(--snow); text-align: center; }
+    .contact h2 { font-size: clamp(1.8rem, 4vw, 2.6rem); letter-spacing: -0.03em; margin: 0 0 14px; }
+    .contact p { color: var(--mist); max-width: 52ch; margin: 0 auto 32px; font-size: 1.1rem; }
+    .contact .cta-row { justify-content: center; }
+
+    footer { background: var(--night); color: var(--mist); padding: 32px 0; font-size: 0.9rem; border-top: 1px solid rgba(255,255,255,0.06); }
+    footer .wrap { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    footer a { color: var(--mist); text-decoration: none; }
+    footer a:hover { color: var(--snow); }
+  </style>
+</head>
+<body>
+
+  <header class="nav">
+    <div class="wrap">
+      <a class="brand" href="#top" aria-label="Digital Powder home">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#3fa9f5"/><path d="M5 24 L13 11 L17 17 L20 13 L27 24 Z" fill="#0b1626"/><path d="M13 11 L15.2 14.5 L13.6 15.6 L12 14 L10.4 15.2 Z" fill="#fff"/></svg>
+        Digital Powder
+      </a>
+      <nav aria-label="Primary">
+        <ul>
+          <li><a href="#products">Products</a></li>
+          <li><a href="#mission">Mission</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- Hero -->
+    <section class="hero">
+      <div class="wrap">
+        <span class="eyebrow">Digital Powder</span>
+        <h1>Software that keeps great gear <span>on the mountain.</span></h1>
+        <p class="lead">We build simple, modern tools that help skiers, riders, and the shops that serve them buy, sell, and consign outdoor gear — so every pair of skis gets a second run.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#products">Explore our products →</a>
+          <a class="btn btn-ghost" href="#consigngear">Join the ConsignGear waitlist</a>
+        </div>
+      </div>
+      <svg class="mountains" viewBox="0 0 1440 220" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 220 L0 150 L140 70 L240 130 L380 30 L520 140 L640 90 L780 160 L900 60 L1040 140 L1160 80 L1300 150 L1440 100 L1440 220 Z" fill="#1d3a63" opacity="0.6"/>
+        <path d="M0 220 L0 180 L180 110 L320 170 L470 90 L620 175 L760 120 L930 185 L1080 105 L1230 170 L1340 135 L1440 165 L1440 220 Z" fill="#f5f8fc"/>
+      </svg>
+    </section>
+
+    <!-- Products -->
+    <section id="products">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="kicker">Our products</div>
+          <h2>Built for the people who live for snow days.</h2>
+          <p>Two products, one goal: make it effortless to give quality gear a second life.</p>
+        </div>
+
+        <div class="products">
+          <article class="card featured" id="myskiswap">
+            <span class="tag live">Live now</span>
+            <h3>MySkiSwap</h3>
+            <p class="sub">The marketplace for pre-loved ski &amp; snowboard gear.</p>
+            <p>Buy and sell skis, boards, boots, and outerwear with people in your local mountain community. List in minutes, find deals before the season starts, and keep good gear out of the landfill.</p>
+            <ul>
+              <li>Fast listings built around how gear is actually sold — size, length, condition, and model year</li>
+              <li>Search by your local resort community or region</li>
+              <li>Made for ski swaps, families sizing up, and gear junkies trading up</li>
+            </ul>
+            <div class="actions">
+              <a class="btn btn-primary" href="https://myskiswap.com" target="_blank" rel="noopener">Visit MySkiSwap →</a>
+            </div>
+          </article>
+
+          <article class="card upcoming" id="consigngear">
+            <span class="tag soon">Coming soon</span>
+            <h3>ConsignGear</h3>
+            <p class="sub">Consignment, without the clipboard.</p>
+            <p>ConsignGear is consignment management for gear shops and ski swap organizers. Check in items, track inventory, sell, and pay out consignors — all from one place instead of spreadsheets and paper tags.</p>
+            <ul>
+              <li>Quick item intake with printable tags</li>
+              <li>Automatic consignor splits, payouts, and statements</li>
+              <li>Real-time inventory for shops and swap events</li>
+            </ul>
+            <div class="actions">
+              <form class="waitlist" action="mailto:hello@digitalpowder.io" method="post" enctype="text/plain">
+                <label for="wl-email" class="sr-only" style="position:absolute;left:-9999px;">Email address</label>
+                <input id="wl-email" type="email" name="ConsignGear waitlist" placeholder="you@yourshop.com" required>
+                <button class="btn" type="submit">Get early access</button>
+              </form>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mission -->
+    <section class="mission" id="mission">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="kicker">What we believe</div>
+          <h2>Good gear deserves more than one season.</h2>
+          <p>Skiing and riding should be accessible, and the gear that makes it possible should keep moving. We build the software that makes that easy.</p>
+        </div>
+        <div class="pillars">
+          <div class="pillar">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7"/><polyline points="21 3 21 9 15 9"/></svg></div>
+            <h4>Keep gear in circulation</h4>
+            <p>Every resold pair of skis is one less in a landfill and one more person on the hill.</p>
+          </div>
+          <div class="pillar">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+            <h4>Lower the cost of entry</h4>
+            <p>Affordable used gear helps families, kids, and first-timers get out there.</p>
+          </div>
+          <div class="pillar">
+            <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+            <h4>Support local shops</h4>
+            <p>Independent shops and community swaps are the heart of ski towns. Our tools help them thrive.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section id="about">
+      <div class="wrap about-grid">
+        <div>
+          <div class="section-head" style="margin-bottom: 20px;">
+            <div class="kicker">About us</div>
+            <h2>A small team of skiers who write software.</h2>
+          </div>
+          <p>Digital Powder started with a simple frustration: buying and selling used ski gear was harder than it needed to be. Classifieds were cluttered, swap meets ran on paper, and great equipment sat in garages.</p>
+          <p>So we built MySkiSwap. Talking with shops and swap organizers along the way, we kept hearing the same thing — consignment is still run on clipboards and spreadsheets. ConsignGear is our answer.</p>
+        </div>
+        <div class="stat-block">
+          <div><strong>Founded on snow</strong><span>Built by people who spend their winters on the mountain.</span></div>
+          <div><strong>Focused</strong><span>We only build for the outdoor gear community — nothing else.</span></div>
+          <div><strong>Independent</strong><span>Bootstrapped, community-first, and listening to our users.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="contact" id="contact">
+      <div class="wrap">
+        <h2>Let's talk gear.</h2>
+        <p>Run a shop or a ski swap? Want to partner, invest, or just say hi? We'd love to hear from you.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="mailto:hello@digitalpowder.io">hello@digitalpowder.io</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>© <span id="year">2026</span> Digital Powder. All rights reserved.</span>
+      <span><a href="https://myskiswap.com" target="_blank" rel="noopener">MySkiSwap</a> · <a href="#consigngear">ConsignGear</a> · <a href="mailto:hello@digitalpowder.io">Contact</a></span>
+    </div>
+  </footer>
+
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>

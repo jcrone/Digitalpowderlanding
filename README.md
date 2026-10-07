@@ -19,5 +19,5 @@ The ConsignGear waitlist posts to Formspree. In `index.html`, replace `YOUR_FORM
 
 - Set the Formspree form ID (see above).
 - ~~MySkiSwap URL~~ — set to `https://app.myskiswap.com`.
-- ~~Contact email~~ — set to `info@myskiswap.com`.
+- ~~Contact email~~ — set to `jamie@digitalpowder.io`.
 - Review the About section copy so it matches your story.
